@@ -119,7 +119,7 @@ jobs:
           fi
 
           echo "SonarQube Quality Gate status: $analysis_status"
-          
+
           echo "quality_gate_status=$analysis_status" >> $GITHUB_OUTPUT
         
       - name: Fetch SonarQube issues and create summary
@@ -130,6 +130,10 @@ jobs:
 
           # Fetch issues (limiting to 10 for example)
           issues_json=$(curl -s -u admin:$admin "${SONAR_HOST_URL}/api/issues/search?projectKeys=simple-sonar-scan&ps=10")
+
+          echo "----- SonarQube API raw JSON response -----"
+          echo "$issues_json"
+          echo "-------------------------------------------"
 
           # Start markdown table
           echo "## SonarQube Issues Summary" >> $GITHUB_STEP_SUMMARY
