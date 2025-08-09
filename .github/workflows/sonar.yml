@@ -153,7 +153,7 @@ jobs:
               (.line // "-")
             ] | @tsv' | while IFS=$'\t' read -r key severity component message line; do
               echo "Key: $key, Severity: $severity, Component: $component, Message: $message, Line: $line"
-          done
+
             # Escape pipes in message to avoid breaking table format
             message_escaped=$(echo "$message" | sed 's/|/\\|/g')
             echo "| [$key](${SONAR_HOST_URL}/project/issues?id=simple-sonar-scan&issues=$key) | $severity | $component | $message_escaped | $line |" >> $GITHUB_STEP_SUMMARY
