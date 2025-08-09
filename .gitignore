@@ -35,4 +35,5 @@ dist/
 node_modules/
 target/
 .idx/.data/
+.idx/*.json
 front/.angular/

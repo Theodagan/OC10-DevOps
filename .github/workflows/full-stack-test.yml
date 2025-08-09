@@ -1,0 +1,65 @@
+name: -FullStack tests (Angular + Spring)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  e2e-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📦 Cache Angular node_modules
+        uses: actions/cache@v3
+        with:
+          path: front/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('front/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: ☕ Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: 📥 Try download Spring Boot JAR
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: spring-boot-jar
+          path: back/target
+
+      - name: 📦 Install Angular
+        working-directory: front
+        run: |
+          npm ci
+
+      - name: ☕ Build Spring Boot JAR (if not downloaded)
+        if: steps.spring-boot-jar.outputs.download-path == ''
+        working-directory: back
+        run: mvn clean install -DskipTests
+
+      - name: ⬆️ Upload Spring Boot JAR
+        if: steps.spring-boot-jar.outputs.download-path == ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: spring-boot-jar
+          path: back/target/*.jar
+
+      - name: 🚀 Start Spring Boot API
+        run: |
+          nohup java -jar back/target/*.jar &
+          sleep 10
+
+      - name: Run Angular tests
+        run: npm test -- --watch=false --browsers=ChromeHeadless 
+        working-directory: ./front
+
+      - name: Run Java tests
+        run: mvn test
+        working-directory: ./back

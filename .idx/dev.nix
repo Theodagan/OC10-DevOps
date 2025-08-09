@@ -8,6 +8,7 @@
     pkgs.mysql
     pkgs.maven
     pkgs.git
+    pkgs.docker-compose
     pkgs.nodePackages."@angular/cli"
   ];
 
@@ -35,18 +36,6 @@
         runServer = "(cd back/ && mvn spring-boot:run) & cd front/ && ng serve";      
       };
     };
-
-    previews = {
-      enable = true;
-      previews.web = {
-        manager = "web";
-        command = [
-          "sh"
-          "-c"
-          "cd front && ng serve --port 4200 --host 0.0.0.0"
-        ];
-      };
-    };
-
+    
   };
 }
