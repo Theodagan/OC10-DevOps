@@ -102,7 +102,7 @@ jobs:
           timeout=120
           elapsed=0
           while [ "$analysis_status" != "SUCCESS" ] && [ $elapsed -lt $timeout ]; do
-            response=$(curl -s -u admin:${{ steps.generate_token.outputs.SONAR_TOKEN }} "http://localhost:9000/api/qualitygates/project_status?projectKey=simple-sonar-scan")
+            response=$(curl -s -u admin:admin "http://localhost:9000/api/qualitygates/project_status?projectKey=simple-sonar-scan")
             analysis_status=$(echo "$response" | jq -r '.projectStatus.status')
             if [ "$analysis_status" = "SUCCESS" ] || [ "$analysis_status" = "ERROR" ] || [ "$analysis_status" = "WARNING" ]; then
               break
