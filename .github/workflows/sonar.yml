@@ -112,7 +112,7 @@ jobs:
             elapsed=$((elapsed+10))
           done
 
-          if [ "$analysis_status" != "SUCCESS" ] && [ "$analysis_status" != "WARNING" ]; then
+          if [ "$analysis_status" != "OK" ] && [ "$analysis_status" != "ERROR" ]; then
             echo "SonarQube Quality Gate failed or timed out. Status: $analysis_status"
             echo "$response" | jq
             exit 1
