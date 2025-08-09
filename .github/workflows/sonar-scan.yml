@@ -73,7 +73,7 @@ jobs:
         id: generate_token
         run: |
           echo "Generating SonarQube project token..."
-          export TOKEN_RESPONSE=$(curl -u -X POST "http://localhost:9000/api/user_tokens/generate" -d "name=ci-token")
+          export TOKEN_RESPONSE=$(curl -u admin:admin -X POST "http://localhost:9000/api/user_tokens/generate" -d "name=ci-token")
           export SONAR_TOKEN=$(echo $TOKEN_RESPONSE | jq -r .token)
 
       - name: Run SonarScanner
