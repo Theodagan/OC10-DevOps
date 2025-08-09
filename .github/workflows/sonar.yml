@@ -1,0 +1,94 @@
+name: Simple Sonar Scan
+
+on:
+  workflow_dispatch:
+
+jobs:
+  sonar-scan:
+    runs-on: ubuntu-latest
+
+    services:
+      sonarqube:
+        image: sonarqube:community
+        ports:
+          - 9000:9000
+        env:
+          SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: "true"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 11 for build
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 11
+
+      - name: ☕ Build Spring Boot JAR
+        working-directory: back
+        run: mvn clean install -DskipTests
+
+      - name: Set up JDK 17 for SonarScanner
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Install SonarScanner CLI
+        run: |
+          wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+          unzip sonar-scanner-cli-5.0.1.3006-linux.zip
+          sudo mv sonar-scanner-5.0.1.3006-linux /opt/sonar-scanner
+          echo "/opt/sonar-scanner/bin" >> $GITHUB_PATH
+
+      - name: Wait for SonarQube to be ready
+        run: |
+          echo "Waiting for SonarQube to be ready..."
+          timeout=300
+          elapsed=0
+          while [ $elapsed -lt $timeout ]; do
+            if curl -s http://localhost:9000/api/system/status 2>/dev/null | grep -q "UP"; then
+              echo "SonarQube is ready!"
+              break
+            fi
+            echo "SonarQube not ready yet, waiting... ($elapsed seconds elapsed)"
+            sleep 15
+            elapsed=$((elapsed + 15))
+          done
+          if [ $elapsed -ge $timeout ]; then
+            echo "Timeout waiting for SonarQube"
+            curl -s http://localhost:9000/api/system/status || echo "Failed to connect"
+            exit 1
+          fi
+
+      - name: Create SonarQube project
+        run: |
+          echo "Creating SonarQube project..."
+          curl -u admin:admin -X POST "http://localhost:9000/api/projects/create" \
+            -d "project=simple-sonar-scan" \
+            -d "name=Simple sonar scan" || echo "Project might already exist"
+      
+      - name: Generate SonarQube project token
+          id: generate_token
+          run: |
+            echo "Generating SonarQube project token..."
+            TOKEN_RESPONSE=$(curl -u admin:admin -X POST "http://localhost:9000/api/user_tokens/generate" -d "name=ci-token")
+            SONAR_TOKEN=$(echo "$TOKEN_RESPONSE" | jq -r .token)
+            echo "SONAR_TOKEN=$SONAR_TOKEN"
+            echo "sonar_token=$SONAR_TOKEN" >> $GITHUB_OUTPUT
+
+      - name: Run SonarScanner
+        env:
+          JAVA_HOME: ${{ env.JAVA_HOME_17_X64 }}
+        run: |
+          echo "Using Java for SonarScanner: $(java -version)"
+          echo "${{ steps.generate_token.outputs.SONAR_TOKEN }}"
+          sonar-scanner \
+            -Dsonar.projectKey=simple-sonar-scan \
+            -Dsonar.projectName="Simple sonar scan" \
+            -Dsonar.sources=back/src,front/src \
+            -Dsonar.java.binaries=back/target/classes \
+            -Dsonar.java.source=11 \
+            -Dsonar.host.url=http://localhost:9000 \
+            -Dsonar.token=${{ steps.generate_token.outputs.SONAR_TOKEN }}
