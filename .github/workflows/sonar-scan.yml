@@ -70,12 +70,13 @@ jobs:
             -d "name=Simple sonar scan" || echo "Project might already exist"
       
       - name: Generate SonarQube project token
-        id: generate_token
-        run: |
-          echo "Generating SonarQube project token..."
-          export TOKEN_RESPONSE=$(curl -u admin:admin -X POST "http://localhost:9000/api/user_tokens/generate" -d "name=ci-token")
-          export SONAR_TOKEN=$(echo $TOKEN_RESPONSE | jq -r .token)
-          echo $TOKEN_response
+          id: generate_token
+          run: |
+            echo "Generating SonarQube project token..."
+            TOKEN_RESPONSE=$(curl -u admin:admin -X POST "http://localhost:9000/api/user_tokens/generate" -d "name=ci-token")
+            SONAR_TOKEN=$(echo "$TOKEN_RESPONSE" | jq -r .token)
+            echo "SONAR_TOKEN=$SONAR_TOKEN"
+            echo "sonar_token=$SONAR_TOKEN" >> $GITHUB_OUTPUT
 
       - name: Run SonarScanner
         env:
