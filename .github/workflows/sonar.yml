@@ -119,11 +119,27 @@ jobs:
           fi
 
           echo "SonarQube Quality Gate status: $analysis_status"
-
-          # Extract key metrics
-          bugs=$(echo "$response" | jq -r '.projectStatus.conditions[] | select(.metricKey=="bugs") | .value')
-          coverage=$(echo "$response" | jq -r '.projectStatus.conditions[] | select(.metricKey=="coverage") | .value')
-          echo "Bugs: $bugs"
-          echo "Coverage: $coverage"
-
+          
           echo "quality_gate_status=$analysis_status" >> $GITHUB_OUTPUT
+        
+      - name: Fetch SonarQube issues and create summary
+        env:
+          SONAR_HOST_URL: http://localhost:9000
+        run: |
+          echo "Fetching issues from SonarQube..."
+
+          # Fetch issues (limiting to 10 for example)
+          issues_json=$(curl -s -u admin:$admin "${SONAR_HOST_URL}/api/issues/search?projectKeys=simple-sonar-scan&ps=10")
+
+          # Start markdown table
+          echo "## SonarQube Issues Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Key | Severity | Component | Message | Line |" >> $GITHUB_STEP_SUMMARY
+          echo "| --- | -------- | --------- | ------- | ---- |" >> $GITHUB_STEP_SUMMARY
+
+          # Parse issues and append rows to summary
+          echo "$issues_json" | jq -c '.issues[] | [.key, .severity, .component, .message, (.line // "-")] | @tsv' | while IFS=$'\t' read -r key severity component message line; do
+            # Escape pipes in message to avoid breaking table format
+            message_escaped=$(echo "$message" | sed 's/|/\\|/g')
+            echo "| [$key](${SONAR_HOST_URL}/project/issues?id=simple-sonar-scan&issues=$key) | $severity | $component | $message_escaped | $line |" >> $GITHUB_STEP_SUMMARY
+          done
