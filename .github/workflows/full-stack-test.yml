@@ -56,10 +56,40 @@ jobs:
           nohup java -jar back/target/*.jar &
           sleep 10
 
-      - name: Run Angular tests
-        run: npm test -- --watch=false --browsers=ChromeHeadless 
+      - name: 🧪 Run Angular tests with coverage
+        run: npm test -- --watch=false --browsers=ChromeHeadless --code-coverage
         working-directory: ./front
 
-      - name: Run Java tests
-        run: mvn test
+      - name: ☕ Run Java tests with coverage
+        run: mvn test jacoco:report
         working-directory: ./back
+
+      - name: 📤 Upload Angular coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: angular-coverage-report
+          path: front/coverage/
+
+      - name: 📤 Upload Java coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: java-coverage-report
+          path: back/target/site/jacoco/
+
+      - name: 📈 Comment coverage summary
+        run: |
+          echo "## Coverage Reports Generated 📊" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Frontend (Angular)" >> $GITHUB_STEP_SUMMARY
+          if [ -f "front/coverage/lcov-report/index.html" ]; then
+            echo "✅ Angular coverage report available in artifacts" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Angular coverage report not found" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Backend (Spring Boot)" >> $GITHUB_STEP_SUMMARY
+          if [ -f "back/target/site/jacoco/index.html" ]; then
+            echo "✅ Java coverage report available in artifacts" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Java coverage report not found" >> $GITHUB_STEP_SUMMARY
+          fi
