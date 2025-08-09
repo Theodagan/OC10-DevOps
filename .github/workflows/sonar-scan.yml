@@ -12,8 +12,10 @@ jobs:
         image: sonarqube:community
         ports:
           - 9000:9000
+        env:
+          SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: "true"
         options: |
-          --health-cmd="curl -f http://localhost:9000 || exit 1"
+          --health-cmd="curl -f http://localhost:9000/api/system/status | grep -q UP || exit 1"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=12
