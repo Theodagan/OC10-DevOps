@@ -1,0 +1,56 @@
+name: Simple Sonar Scan
+
+on:
+  workflow_dispatch:
+
+jobs:
+  sonar-scan:
+    runs-on: ubuntu-latest
+
+    services:
+      sonarqube:
+        image: sonarqube:community
+        ports:
+          - 9000:9000
+        options: > 
+          --health-cmd="curl -f http://localhost:9000 || exit 1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: ☕ Build Spring Boot JAR (if not downloaded)
+        if: steps.download-jar.outcome != 'success'
+        working-directory: back
+        run: mvn clean install -DskipTests
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Install SonarScanner CLI
+        run: |
+          wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
+          unzip sonar-scanner-cli-4.8.0.2856-linux.zip
+          sudo mv sonar-scanner-4.8.0.2856-linux /opt/sonar-scanner
+          echo "/opt/sonar-scanner/bin" >> $GITHUB_PATH
+
+      - name: Wait for SonarQube to be ready
+        run: |
+          echo "Waiting for SonarQube to be ready..."
+          until curl -s http://localhost:9000 > /dev/null; do sleep 5; done
+
+      - name: Run SonarScanner
+        run: |
+          sonar-scanner \
+            -Dsonar.projectKey=simple-sonar-scan \
+            -Dsonar.projectName="Simple sonar scan" \
+            -Dsonar.sources=back/src,front/src \
+            -Dsonar.language=java,ts \
+            -Dsonar.host.url=http://localhost:9000 \
+            -Dsonar.login=admin
