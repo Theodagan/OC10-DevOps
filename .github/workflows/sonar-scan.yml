@@ -75,12 +75,14 @@ jobs:
           echo "Generating SonarQube project token..."
           export TOKEN_RESPONSE=$(curl -u admin:admin -X POST "http://localhost:9000/api/user_tokens/generate" -d "name=ci-token")
           export SONAR_TOKEN=$(echo $TOKEN_RESPONSE | jq -r .token)
+          echo $TOKEN_response
 
       - name: Run SonarScanner
         env:
           JAVA_HOME: ${{ env.JAVA_HOME_17_X64 }}
         run: |
           echo "Using Java for SonarScanner: $(java -version)"
+          echo "${{ steps.generate_token.outputs.SONAR_TOKEN }}"
           sonar-scanner \
             -Dsonar.projectKey=simple-sonar-scan \
             -Dsonar.projectName="Simple sonar scan" \
