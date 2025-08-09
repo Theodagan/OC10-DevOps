@@ -96,16 +96,13 @@ jobs:
 
       - name: Get SonarQube Quality Gate status
         id: quality_gate
-        env:
-          SONAR_HOST_URL: http://localhost:9000
-          SONAR_TOKEN: ${{ steps.generate_token.outputs.sonar_token }}
         run: |
           echo "Waiting for SonarQube analysis report..."
           analysis_status=""
           timeout=120
           elapsed=0
           while [ "$analysis_status" != "SUCCESS" ] && [ $elapsed -lt $timeout ]; do
-            response=$(curl -s -u admin:${SONAR_TOKEN} "http://localhost:9000/api/qualitygates/project_status?projectKey=simple-sonar-scan")
+            response=$(curl -s -u admin:admin "http://localhost:9000/api/qualitygates/project_status?projectKey=simple-sonar-scan")
             analysis_status=$(echo "$response" | jq -r '.projectStatus.status')
             if [ "$analysis_status" = "SUCCESS" ] || [ "$analysis_status" = "ERROR" ] || [ "$analysis_status" = "WARNING" ]; then
               break
@@ -134,12 +131,11 @@ jobs:
       - name: Fetch SonarQube issues and create summary
         env:
           SONAR_HOST_URL: http://localhost:9000
-          SONAR_TOKEN: ${{ steps.generate_token.outputs.sonar_token }}
         run: |
           echo "Fetching issues from SonarQube..."
 
           # Fetch issues (limiting to 10 for example)
-          issues_json=$(curl -s -u admin:${SONAR_TOKEN} "${SONAR_HOST_URL}/api/issues/search?projectKeys=simple-sonar-scan&ps=10")
+          issues_json=$(curl -s -u admin:admin "${SONAR_HOST_URL}/api/issues/search?components=simple-sonar-scan")
 
           # Start markdown table
           echo "## SonarQube Issues Summary" >> $GITHUB_STEP_SUMMARY
