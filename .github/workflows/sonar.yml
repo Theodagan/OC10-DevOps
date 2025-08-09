@@ -92,3 +92,38 @@ jobs:
             -Dsonar.java.source=11 \
             -Dsonar.host.url=http://localhost:9000 \
             -Dsonar.token=${{ steps.generate_token.outputs.SONAR_TOKEN }}
+      
+
+      - name: Get SonarQube Quality Gate status
+        id: quality_gate
+        run: |
+          echo "Waiting for SonarQube analysis report..."
+          analysis_status=""
+          timeout=120
+          elapsed=0
+          while [ "$analysis_status" != "SUCCESS" ] && [ $elapsed -lt $timeout ]; do
+            response=$(curl -s -u admin:${{ steps.generate_token.outputs.SONAR_TOKEN }} "http://localhost:9000/api/qualitygates/project_status?projectKey=simple-sonar-scan")
+            analysis_status=$(echo "$response" | jq -r '.projectStatus.status')
+            if [ "$analysis_status" = "SUCCESS" ] || [ "$analysis_status" = "ERROR" ] || [ "$analysis_status" = "WARNING" ]; then
+              break
+            fi
+            echo "Analysis status: $analysis_status. Waiting 10s..."
+            sleep 10
+            elapsed=$((elapsed+10))
+          done
+
+          if [ "$analysis_status" != "SUCCESS" ] && [ "$analysis_status" != "WARNING" ]; then
+            echo "SonarQube Quality Gate failed or timed out. Status: $analysis_status"
+            echo "$response" | jq
+            exit 1
+          fi
+
+          echo "SonarQube Quality Gate status: $analysis_status"
+
+          # Extract key metrics
+          bugs=$(echo "$response" | jq -r '.projectStatus.conditions[] | select(.metricKey=="bugs") | .value')
+          coverage=$(echo "$response" | jq -r '.projectStatus.conditions[] | select(.metricKey=="coverage") | .value')
+          echo "Bugs: $bugs"
+          echo "Coverage: $coverage"
+
+          echo "quality_gate_status=$analysis_status" >> $GITHUB_OUTPUT
