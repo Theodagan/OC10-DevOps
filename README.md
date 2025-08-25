@@ -37,8 +37,8 @@ Ce document présente l'analyse du workflow CI/CD mis en place pour l'applicatio
 
 **Déclencheurs** :
 - Manuel (`workflow_dispatch`)
-- Push sur branches `main` et `develop` (commenté actuellement)
-- Tags de version (commenté actuellement)
+- Push sur branches `main` et `develop`
+- Tags de version 
 
 ### 2. Tests Full-Stack (`full-stack-test.yml`)
 
@@ -154,24 +154,7 @@ Ce document présente l'analyse du workflow CI/CD mis en place pour l'applicatio
 - **Tendance souhaitée** : Augmentation progressive
 - **Mesure** : Nombre de tags `latest` créés
 
-## 📈 Analyse des Métriques Actuelles
-
-**Tests et Couverture** :
-- ✅ **Workflow configuré** : Tests Angular + Spring Boot
-- ✅ **Rapports générés** : Coverage HTML disponible
-- ⚠️ **Métrique manquante** : Valeurs actuelles de couverture à mesurer lors du premier run
-
-**Build Docker** :
-- ✅ **AMD64 Build** : Fonctionnel (temps: ~2-3 minutes)
-- ❌ **ARM64 Build** : Échoue (timeout réseau Yarn)
-- **Optimisation nécessaire** : Dockerfile frontend (node:latest → node:18-alpine)
-
-**Qualité SonarQube** :
-- ✅ **Analyse multi-langage** : Java + TypeScript
-- ✅ **Quality Gate configuré** : Statut SUCCESS/ERROR
-- ✅ **Reporting GitHub** : Tableau des issues automatique
-
-## 📋 Tableau de Bord KPIs
+## 📋 Tableau de Bord KPIs actuels
 
 | KPI | Valeur Cible | Statut Actuel | Tendance |
 |-----|--------------|---------------|-----------|
