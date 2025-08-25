@@ -1,11 +1,9 @@
 name: Build and Push Docker Images to Docker Hub
 
 on:
-  # push:
-  #   branches: [ main, develop ]
-  #   tags: [ 'v*' ]
-  # pull_request:
-  #   branches: [ main ]
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
   workflow_dispatch:
 
 
