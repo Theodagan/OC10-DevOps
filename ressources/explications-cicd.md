@@ -148,21 +148,16 @@ Ce document présente l'analyse du workflow CI/CD mis en place pour l'applicatio
 - **Seuil critique** : **< 85%**
 - **Période de mesure** : 30 derniers jours
 
-### KPI 5 : Fréquence de Déploiement
-- **Métrique** : Nombre de déploiements par semaine
-- **Objectif** : **2-3 déploiements/semaine**
-- **Tendance souhaitée** : Augmentation progressive
-- **Mesure** : Nombre de tags `latest` créés
 
 ## 📋 Tableau de Bord KPIs actuels
 
 | KPI | Valeur Cible | Statut Actuel | Tendance |
 |-----|--------------|---------------|-----------|
-| **Code Coverage** | > 80% | ⏳ À mesurer | - |
-| **Build Time** | < 10 min | ⏳ À exécuter  | - |
-| **SonarQube Gate** | PASSED | ⏳ À mesurer | - |
-| **Success Rate** | > 95% | ⏳ À mesurer  | - |
-| **Deploy Frequency** | 2-3/semaine | ⏳ Manuel | - |
+| **Code Coverage Front** | > 80% | ⚠️ 76.92 | - |
+| **Code Coverage Back** | > 80% | ❌ 32%	 | - |
+| **Build Time** | < 10 min | ✅ 3m24  | - |
+| **SonarQube Gate** | PASSED | ✅ PASSED | - |
+| **Success Rate** | > 95% | ⏳ À mesurer à intervale régulier | - |
 
 *Légende : ✅ Bon / ⚠️ Attention / ❌ Critique / ⏳ En attente*
 
