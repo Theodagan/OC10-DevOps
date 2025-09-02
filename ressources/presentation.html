@@ -6,6 +6,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+        :root{
+            --r-main-font-size: 22px;
+        }
         .reveal {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
@@ -21,18 +24,18 @@
         .workflow-step {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             padding: 20px;
-            margin: 15px 0;
             border-radius: 10px;
             border-left: 5px solid #00d4aa;
+            height: 66px;
         }
         
         .kpi-card {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: linear-gradient(135deg, #646464 0%, #ffffff 100%);
             padding: 15px;
             margin: 10px;
             border-radius: 8px;
             display: inline-block;
-            width: 45%;
+            width: 40%;
             min-height: 120px;
         }
         
@@ -103,7 +106,7 @@
         .dashboard-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
+            margin: 20px 0 !important;
         }
         
         .dashboard-table th, .dashboard-table td {
@@ -125,6 +128,15 @@
             padding: 3px 8px;
             border-radius: 4px;
             color: #333;
+        }
+        .slide section{
+            height: 100%;
+            display: flex !important;
+            flex-direction: column;
+            justify-content: center;
+        }
+        h2{
+            margin-bottom: 72px !important;
         }
     </style>
 </head>
@@ -187,25 +199,26 @@
             <!-- Slide 3: Workflow 1 - Docker Build -->
             <section>
                 <h2>🐳 Workflow 1: Build & Push Docker</h2>
-                
-                <div class="workflow-step">
-                    <h4><i class="fas fa-key"></i> 1. Authentification Docker Hub</h4>
-                    <p>Connexion sécurisée via secrets GitHub</p>
-                </div>
-                
-                <div class="workflow-step">
-                    <h4><i class="fas fa-tools"></i> 2. Configuration Buildx</h4>
-                    <p>Multi-architecture & cache avancé</p>
-                </div>
-                
-                <div class="workflow-step">
-                    <h4><i class="fas fa-tags"></i> 3. Génération Tags</h4>
-                    <p>Automatic semantic versioning</p>
-                </div>
-                
-                <div class="workflow-step">
-                    <h4><i class="fas fa-upload"></i> 4. Build & Push</h4>
-                    <p>Frontend + Backend → Docker Hub</p>
+                <div class="workflow" style="display: flex; flex-direction: column; gap: 20px;">
+                    <div class="workflow-step">
+                        <h4><i class="fas fa-key"></i> 1. Authentification Docker Hub</h4>
+                        <p>Connexion sécurisée via secrets GitHub</p>
+                    </div>
+                    
+                    <div class="workflow-step">
+                        <h4><i class="fas fa-tools"></i> 2. Configuration Buildx</h4>
+                        <p>Multi-architecture & cache avancé</p>
+                    </div>
+                    
+                    <div class="workflow-step">
+                        <h4><i class="fas fa-tags"></i> 3. Génération Tags</h4>
+                        <p>Automatic semantic versioning</p>
+                    </div>
+                    
+                    <div class="workflow-step">
+                        <h4><i class="fas fa-upload"></i> 4. Build & Push</h4>
+                        <p>Frontend + Backend → Docker Hub</p>
+                    </div>
                 </div>
 
                 <p style="text-align: center; margin-top: 30px;">
@@ -237,14 +250,14 @@
                     </div>
                 </div>
 
-                <div class="workflow-step" style="margin-top: 30px;">
+                <div class="workflow-step" style="margin-top: 30px; height: unset;">
                     <h4><i class="fas fa-server"></i> Tests d'intégration</h4>
                     <p>Spring Boot API démarrée automatiquement</p>
                     <p>Tests Angular exécutés contre l'API réelle</p>
                 </div>
 
-                <div style="text-align: center; margin-top: 20px;">
-                    <strong>📤 Artefacts générés :</strong><br>
+                <div style="text-align: center; margin-top: 30px; margin-bottom: 22px;">
+                    <strong>📤 Artefacts générés :</strong><br><br>
                     <span class="highlight">angular-coverage-report</span> • 
                     <span class="highlight">java-coverage-report</span>
                 </div>
@@ -287,12 +300,12 @@
             <section>
                 <h2>📊 KPIs Définis</h2>
                 
-                <div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
+                <div style="display: flex; flex-wrap: wrap; justify-content: center;">
                     <div class="kpi-card">
                         <h4><i class="fas fa-shield-alt"></i> Code Coverage</h4>
                         <p><strong>OBLIGATOIRE</strong></p>
                         <p>Minimum : <span class="highlight">80%</span></p>
-                        <p>Critique : <span style="color: #ef4444;">60%</span></p>
+                        <p>Critique : <span style="color: #ef4444;">54%</span></p>
                     </div>
                     
                     <div class="kpi-card">
@@ -303,8 +316,9 @@
                     
                     <div class="kpi-card">
                         <h4><i class="fas fa-bug"></i> Qualité Code</h4>
-                        <p>Bugs : <span style="color: #4ade80;">0</span></p>
-                        <p>Vulnérabilités : <span style="color: #4ade80;">0</span></p>
+                        <p>Quality Gate <span style="color: #4ade80;">PASSED</span></p>
+                        <p>Nombre d'issues : <span style="color: #4ade80;">12</span></p>
+                        <p>High issues : <span style="color: #ef4444;">1</span></p>
                     </div>
                     
                     <div class="kpi-card">
@@ -316,58 +330,6 @@
                 
                 <div style="text-align: center; margin-top: 30px;">
                     <p><strong>+ Fréquence de déploiement :</strong> 2-3 déploiements/semaine</p>
-                </div>
-            </section>
-
-            <!-- Slide 7: Dashboard actuel -->
-            <section>
-                <h2>📈 Dashboard KPIs Actuels</h2>
-                
-                <table class="dashboard-table">
-                    <thead>
-                        <tr>
-                            <th>KPI</th>
-                            <th>Valeur Cible</th>
-                            <th>Statut Actuel</th>
-                            <th>Tendance</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Code Coverage</strong></td>
-                            <td>> 80%</td>
-                            <td class="metric-pending">⏳ À mesurer</td>
-                            <td>-</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Build Time</strong></td>
-                            <td>< 10 min</td>
-                            <td class="metric-good">✅ ~5 min</td>
-                            <td>↗️ Stable</td>
-                        </tr>
-                        <tr>
-                            <td><strong>SonarQube Gate</strong></td>
-                            <td>PASSED</td>
-                            <td class="metric-pending">⏳ À exécuter</td>
-                            <td>-</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Success Rate</strong></td>
-                            <td>> 95%</td>
-                            <td class="metric-critical">❌ ~60% (ARM64)</td>
-                            <td>↘️ Dégradé</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Deploy Frequency</strong></td>
-                            <td>2-3/semaine</td>
-                            <td class="metric-pending">⏳ Manuel</td>
-                            <td>-</td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                <div style="text-align: center; margin-top: 20px;">
-                    <small><strong>Légende :</strong> ✅ Bon / ⚠️ Attention / ❌ Critique / ⏳ En attente</small>
                 </div>
             </section>
 
@@ -452,47 +414,8 @@
                 </div>
             </section>
 
-            <!-- Slide 10: Rapports générés -->
-            <section>
-                <h2>📊 Rapports Générés</h2>
-                
-                <div style="display: flex; justify-content: space-between;">
-                    <div style="width: 30%; text-align: center;">
-                        <div style="background: rgba(221,0,49,0.1); padding: 20px; border-radius: 10px;">
-                            <i class="fas fa-chart-pie" style="font-size: 3em; color: #dd0031;"></i>
-                            <h4>Angular Coverage</h4>
-                            <p>Rapports HTML interactifs</p>
-                            <p>Métriques ligne par ligne</p>
-                        </div>
-                    </div>
-                    
-                    <div style="width: 30%; text-align: center;">
-                        <div style="background: rgba(109,179,63,0.1); padding: 20px; border-radius: 10px;">
-                            <i class="fas fa-chart-bar" style="font-size: 3em; color: #6db33f;"></i>
-                            <h4>JaCoCo Reports</h4>
-                            <p>Instructions, branches</p>
-                            <p>Méthodes, classes</p>
-                        </div>
-                    </div>
-                    
-                    <div style="width: 30%; text-align: center;">
-                        <div style="background: rgba(79,172,254,0.1); padding: 20px; border-radius: 10px;">
-                            <i class="fas fa-clipboard-list" style="font-size: 3em; color: #4facfe;"></i>
-                            <h4>SonarQube</h4>
-                            <p>Quality Gate status</p>
-                            <p>Issues summary</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div style="margin-top: 30px; text-align: center;">
-                    <p><strong>💾 Stockage :</strong> Tous les rapports conservés comme artefacts GitHub</p>
-                    <p><strong>🔗 Accès :</strong> Téléchargement direct depuis l'interface Actions</p>
-                </div>
-            </section>
-
             <!-- Slide 11: Démonstration -->
-            <section>
+            <!-- <section>
                 <h2>💻 Démonstration Pratique</h2>
                 
                 <div class="demo-section">
@@ -513,37 +436,11 @@
                         <div>🏷️ <strong>Tags Docker</strong><br>automatiques</div>
                     </div>
                 </div>
-            </section>
+            </section> -->
 
             <!-- Slide 12: Document technique -->
-            <section>
-                <h2>📚 Document de Documentation</h2>
-                
-                <div style="display: flex; justify-content: space-between;">
-                    <div style="width: 48%;">
-                        <h4><i class="fas fa-file-alt"></i> Structure</h4>
-                        <ul>
-                            <li>✍️ <strong>Workflows détaillés</strong><br>Objectif de chaque étape</li>
-                            <li>📊 <strong>KPIs avec seuils</strong><br>Métriques mesurables</li>
-                            <li>📈 <strong>État actuel</strong><br>Baseline et tendances</li>
-                            <li>💡 <strong>Recommandations</strong><br>Plan d'action priorité</li>
-                        </ul>
-                    </div>
-                    
-                    <div style="width: 48%;">
-                        <h4><i class="fas fa-lightbulb"></i> Valeur ajoutée</h4>
-                        <ul>
-                            <li><strong>Guide technique</strong> pour nouveaux développeurs</li>
-                            <li><strong>Référentiel KPIs</strong> pour le management</li>
-                            <li><strong>Plan d'amélioration</strong> structuré sur 30 jours</li>
-                            <li><strong>Suivi des métriques</strong> dans le temps</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div style="background: rgba(0,212,170,0.1); padding: 15px; border-radius: 10px; text-align: center; margin-top: 20px;">
-                    <strong>📅 Document vivant :</strong> Version 1.0 • Prochaine révision : 15 septembre 2025
-                </div>
+            <section data-background-iframe="Perotti_Theo_2_explication_082025.pdf"
+                    data-background-interactive>
             </section>
         </div>
     </div>
