@@ -169,11 +169,11 @@ Avec la mise en place du wrkflow de tests ce genre de probleme sera identifié p
 
 > #BobApp j’ai remonté un bug sur le post de vidéo il y a deux semaines et il est encore présent !! Les devs vous faites quoi ????  
 
-Le workflow d'analyse de qualité du code permettra d'identifer ce problème en avance et le workflow de deployement permettra de mettre les solutions en production le,plus rapidement possible. 
+Le workflow d'analyse de qualité du code permettra d'identifer ce problème en avance et le workflow de deployement permettra de mettre les solutions en production le plus rapidement possible. 
 
 > Ça fait une semaine que je ne reçois plus rien, j’ai envoyé un email il y a 5 jours mais toujours pas de nouvelles…  
 
-
+De meilleurs screening de bugs d'integration et de logique couplés a des deploiements plus fréquents et une anlayse plus poussée (tests unitaires + analyse Sonar) devraient être a même de régler ce type de problèmes.
 
 > J’ai supprimé ce site de mes favoris ce matin, dommage, vraiment dommage.  
 
