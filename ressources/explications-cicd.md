@@ -165,7 +165,7 @@ Ce document présente l'analyse du workflow CI/CD mis en place pour l'applicatio
 
 > ⭐ Je mets une étoile car je ne peux pas en mettre zéro ! Impossible de poster une suggestion de blague, le bouton rouge fait planter mon navigateur !  
 
-Avec la mise en place du wrkflow de tests ce genre de probleme sera identifié par les tests d'intégrations et corrigé avant d'atteindre la production. 
+Avec la mise en place du workflow de tests ce genre de probleme sera identifié par les tests d'intégrations et corrigé avant d'atteindre la production. 
 
 > #BobApp j’ai remonté un bug sur le post de vidéo il y a deux semaines et il est encore présent !! Les devs vous faites quoi ????  
 
@@ -173,7 +173,7 @@ Le workflow d'analyse de qualité du code permettra d'identifer ce problème en 
 
 > Ça fait une semaine que je ne reçois plus rien, j’ai envoyé un email il y a 5 jours mais toujours pas de nouvelles…  
 
-De meilleurs screening de bugs d'integration et de logique couplés a des deploiements plus fréquents et une anlayse plus poussée (tests unitaires + analyse Sonar) devraient être a même de régler ce type de problèmes.
+De meilleurs screening de bugs d'integration et de logique couplés a des deploiements plus fréquents et une analyse plus poussée (tests unitaires + analyse Sonar) devraient être a même de régler ce type de problèmes. 
 
 > J’ai supprimé ce site de mes favoris ce matin, dommage, vraiment dommage.  
 
