@@ -1,9 +1,6 @@
 name: Build and Push Docker Images to Docker Hub
 
 on:
-  push:
-    branches: [ main ]
-    tags: [ 'v*' ]
   workflow_dispatch:
   workflow_run:
     workflows: ["Sonar-Scan"]
