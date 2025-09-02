@@ -1,10 +1,11 @@
-name: Simple Sonar Scan
+name: Sonar-Scan
 
 on:
   workflow_dispatch:
-  pull_request:
-    branches: [ main, develop ]
-    types: [opened, synchronize, reopened]
+  workflow_run:
+    workflows: ["FullStack-tests"]
+    types:
+      - completed
 
 jobs:
   sonar-scan:

@@ -1,4 +1,4 @@
-name: FullStack tests (Angular + Spring)
+name: FullStack-tests
 
 on:
   workflow_dispatch:
